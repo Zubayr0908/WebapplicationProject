@@ -2,6 +2,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import'./auth.css'
+import './img/view.png'
 
 const Login: React.FC = () => {
     const [email, setEmail] = useState('');
@@ -21,14 +23,39 @@ const Login: React.FC = () => {
     };
 
     return (
-        <div>
-            <h2>Login</h2>
-            <form onSubmit={handleLogin}>
-                <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} required />
-                <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} required />
-                <button type="submit">Login</button>
-            </form>
+        <div className='container'>
+        <div className="head">
+           <h2>Your Logo</h2>
         </div>
+        <div className="body-part">
+            <div className="left-side">
+                 <div className="text-part">
+                      <h1>Sign up to <br /> <span>Lorem ipsum dolor sit</span></h1>
+                      <p>
+                        If you already have an account <br />
+                        You can <a href="/">Register here</a> !
+                      </p>
+                 </div>
+            </div>
+            <div className="right-side">
+                <div className="login-part">
+                  <form onSubmit={handleLogin}>
+                    <h1>Log In</h1>
+                       <div>
+                           <input type="email" value={email} placeholder='Enter your email' onChange={(e) => setEmail(e.target.value)} required />
+                       </div>
+                       <div>
+                           <input type="password" value={password} placeholder='Enter your password' onChange={(e) => setPassword(e.target.value)} required />
+                           
+                       </div>
+                        <p>Forgot password ?</p>
+                       <button type="submit">Login</button>
+                   </form>
+                </div>
+            </div>
+        </div>
+        
+    </div>
     );
 };
 
