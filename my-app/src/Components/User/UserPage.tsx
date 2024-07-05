@@ -15,11 +15,11 @@ const UserPage: React.FC = () => {
             width="150px"
             height="150px"
           />
-          <p class="full_name left_text">Full Name</p>
+          <label class="full_name left_text">Full Name</label>
           <p class="name left_text"></p>
-          <p class="email_address left_text">E-mail address</p>
+          <label class="email_address left_text">E-mail address</label>
           <p class="email left_text"></p>
-          <p class="passwordofuser left_text">Password of user</p>
+          <label class="passwordofuser left_text">Password of user</label>
           <p class="password left_text"></p>
         </div>
         <div class="right_box">
@@ -45,7 +45,7 @@ const UserPage: React.FC = () => {
             <input
               class="password_box2 right_text"
               type="password"
-              name="password"
+              name="confirm-password"
             />
             <button class="edit_profile" type="submit">Edit profile</button>
           </form>
