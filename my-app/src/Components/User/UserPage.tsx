@@ -66,7 +66,7 @@ const App: React.FC = () => {
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const response = await fetch('API');
+        const response = await fetch('https://taskproject-aydr.onrender.com/get_user_info');
         const data: Profile = await response.json();
         setProfile(data);
       } catch (error) {
@@ -81,7 +81,7 @@ const App: React.FC = () => {
     setProfile(updatedProfile);
 
     try {
-      await fetch('API', {
+      await fetch('https://taskproject-aydr.onrender.com/get_user_info', {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
