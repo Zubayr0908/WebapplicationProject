@@ -1,58 +1,110 @@
-// UserPage.tsx
-import React from 'react';
-import UserProfile from './UserProfile';
-import'./userpage.css'
+import React, { useState, useEffect, FormEvent } from 'react';
+import './userpage.css';
 
-const UserPage: React.FC = () => {
-    return (
-<div class="container">
-      <div class="main_box">
-        <div class="left_box">
-          <img
-            class="rick"
-            src="https://hackaday.com/wp-content/uploads/2023/04/rickroll-featured.jpg?w=600&h=450"
-            alt="image"
-            width="150px"
-            height="150px"
-          />
-          <label class="full_name left_text">Full Name</label>
-          <p class="name left_text"></p>
-          <label class="email_address left_text">E-mail address</label>
-          <p class="email left_text"></p>
-          <label class="passwordofuser left_text">Password of user</label>
-          <p class="password left_text"></p>
-        </div>
-        <div class="right_box">
-          <p class="profile_settings">Profile Settings</p>
-          <form class="mini_box">
-            <input
-              class="name_box right_text"
-              type="text"
-              name="name"
-              value="John Doe"
-            />
-            <input
-              class="email_box right_text"
-              type="email"
-              name="email"
-              value="johnDoe@gmail.com"
-            />
-            <input
-              class="password_box1 right_text"
-              type="password"
-              name="password"
-            />
-            <input
-              class="password_box2 right_text"
-              type="password"
-              name="confirm-password"
-            />
-            <button class="edit_profile" type="submit">Edit profile</button>
-          </form>
-        </div>
+interface Profile {
+  name: string;
+  email: string;
+  password: string;
+}
+
+// Profile
+const Profile: React.FC<{ profile: Profile }> = ({ profile }) => {
+  return (
+    <div className="profile-card">
+      <img src="https://hackaday.com/wp-content/uploads/2023/04/rickroll-featured.jpg?w=600&h=450" alt="Profile" className="profile-img" />
+      <div className="profile-info">
+        <h2>{profile.name}</h2>
+        <p>{profile.email}</p>
+        <p>{profile.password}</p>
       </div>
     </div>
-    );
+  );
 };
 
-export default UserPage;
+// Edit Profile
+const EditProfile: React.FC<{ profile: Profile; onSave: (profile: Profile) => void }> = ({ profile, onSave }) => {
+  const [name, setName] = useState(profile.name);
+  const [email, setEmail] = useState(profile.email);
+  const [password, setPassword] = useState(profile.password);
+
+  const handleSave = () => {
+    const updatedProfile = { name, email, password };
+    onSave(updatedProfile);
+  };
+
+  return (
+    <div className="profile-edit">
+      <h1>Profile Settings</h1>
+      <form
+        onSubmit={(e: FormEvent) => {
+          e.preventDefault();
+          handleSave();
+        }}
+      >
+        <div className="form-group">
+          <label>Name:</label>
+          <input type="text" value={name} onChange={e => setName(e.target.value)} />
+        </div>
+        <div className="form-group">
+          <label>Email:</label>
+          <input type="email" value={email} onChange={e => setEmail(e.target.value)} />
+        </div>
+        <div className="form-group">
+          <label>Password:</label>
+          <input type="password" value={password} onChange={e => setPassword(e.target.value)} />
+        </div>
+        <button type="submit" className="btn-save">Edit Profile</button>
+      </form>
+    </div>
+  );
+};
+
+// Main App
+const App: React.FC = () => {
+  const [profile, setProfile] = useState<Profile | null>(null);
+
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const response = await fetch('API');
+        const data: Profile = await response.json();
+        setProfile(data);
+      } catch (error) {
+        console.error('Error fetching profile:', error);
+      }
+    };
+
+    fetchProfile();
+  }, []);
+
+  const handleSave = async (updatedProfile: Profile) => {
+    setProfile(updatedProfile);
+
+    try {
+      await fetch('API', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(updatedProfile),
+      });
+    } catch (error) {
+      console.error('Error updating profile:', error);
+    }
+  };
+
+  if (!profile) {
+    return <div>Loading...</div>;
+  }
+
+  return (
+    <div className="App">
+      <div className="profile-container">
+        <Profile profile={profile} />
+        <EditProfile profile={profile} onSave={handleSave} />
+      </div>
+    </div>
+  );
+};
+
+export default App;
